@@ -1,0 +1,120 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+}
+
+model DashboardConfig {
+  id                String   @id @default(uuid())
+  key               String   @unique @default("default")
+  appName           String
+  loginBadge        String
+  loginHeadline     String
+  loginDescription  String
+  dashboardSubtitle String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model UserAccount {
+  id           String   @id @default(uuid())
+  fullName     String
+  email        String   @unique
+  passwordHash String
+  role         String   @default("operator")
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model TestRig {
+  id          String      @id @default(uuid())
+  name        String
+  code        String      @unique
+  location    String?
+  description String?
+  status      String      @default("ONLINE")
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  sensors     Sensor[]
+  alerts      AlertEvent[]
+}
+
+model Sensor {
+  id                    String                 @id @default(uuid())
+  rigId                 String
+  rig                   TestRig                @relation(fields: [rigId], references: [id])
+  name                  String
+  key                   String                 @unique
+  sensorType            String
+  unit                  String?
+  minThreshold          Float?
+  maxThreshold          Float?
+  warningThreshold      Float?
+  criticalThreshold     Float?
+  isEnabled             Boolean                @default(true)
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  switchReadings        SwitchReading[]
+  tofReadings           TofReading[]
+  temperatureReadings   TemperatureReading[]
+  accelerometerReadings AccelerometerReading[]
+}
+
+model SwitchReading {
+  id         String   @id @default(uuid())
+  sensorId   String
+  sensor     Sensor   @relation(fields: [sensorId], references: [id])
+  value      Boolean
+  recordedAt DateTime @default(now())
+
+  @@index([sensorId, recordedAt])
+}
+
+model TofReading {
+  id         String   @id @default(uuid())
+  sensorId   String
+  sensor     Sensor   @relation(fields: [sensorId], references: [id])
+  distanceMm Int
+  partCount  Int
+  recordedAt DateTime @default(now())
+
+  @@index([sensorId, recordedAt])
+}
+
+model TemperatureReading {
+  id           String   @id @default(uuid())
+  sensorId     String
+  sensor       Sensor   @relation(fields: [sensorId], references: [id])
+  temperatureC Float
+  recordedAt   DateTime @default(now())
+
+  @@index([sensorId, recordedAt])
+}
+
+model AccelerometerReading {
+  id         String   @id @default(uuid())
+  sensorId   String
+  sensor     Sensor   @relation(fields: [sensorId], references: [id])
+  axisX      Float
+  axisY      Float
+  axisZ      Float
+  magnitude  Float
+  recordedAt DateTime @default(now())
+
+  @@index([sensorId, recordedAt])
+}
+
+model AlertEvent {
+  id         String   @id @default(uuid())
+  rigId      String
+  rig        TestRig  @relation(fields: [rigId], references: [id])
+  sensorId   String?
+  title      String
+  message    String
+  severity   String
+  isResolved Boolean  @default(false)
+  createdAt  DateTime @default(now())
+}

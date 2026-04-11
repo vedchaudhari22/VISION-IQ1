@@ -1,0 +1,34 @@
+{
+  "name": "iot-test-rig-dashboard",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npm:dev:server\" \"npm:dev:client\"",
+    "dev:client": "vite",
+    "dev:server": "node server/index.js",
+    "build": "npm run build:css && vite build",
+    "preview": "vite preview",
+    "start": "node server/index.js",
+    "build:css": "tailwindcss -i ./src/index.css -o ./src/styles.generated.css"
+  },
+  "dependencies": {
+    "@influxdata/influxdb-client": "^1.35.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.1",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.3.2",
+    "helmet": "^8.1.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "recharts": "^2.15.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.4.1",
+    "autoprefixer": "^10.4.20",
+    "concurrently": "^9.2.1",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "vite": "^5.4.11"
+  }
+}
