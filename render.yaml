@@ -13,16 +13,21 @@ services:
       - key: PORT
         value: 10000
       - key: INFLUX_URL
+        value: https://us-west-2-1.api.influxdata.com
         sync: false
       - key: INFLUX_TOKEN
+        value: w3X1xPQ3roEsQeoFyvhlJ44kz6MlBKkJqRYAYXCPvDyUFZrtPBc8j9mUErHcogQhfySxlz9QRcxu6YbQY_bFQw==
         sync: false
       - key: INFLUX_ORG
+        value: iot-test-rig
         sync: false
       - key: INFLUX_BUCKET
+        value: iot-data1
         sync: false
       - key: APP_SECRET
         sync: false
       - key: INGEST_API_KEY
+        value: iot-plc-ingest-key-2026
         sync: false
       - key: CLIENT_ORIGIN
         sync: false

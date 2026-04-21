@@ -1,5 +1,5 @@
 import { Point } from "@influxdata/influxdb-client";
-import { queryApi, getWriteApi } from "./db.js";
+import { getQueryApi, getWriteApi } from "./db.js";
 import { loadEnv } from "./env.js";
 
 const { influxBucket } = loadEnv();
@@ -71,6 +71,7 @@ function buildAlerts(latestSnapshot, thresholds) {
 }
 
 async function queryInflux(fluxQuery) {
+  const queryApi = getQueryApi();
   return new Promise((resolve, reject) => {
     const rows = [];
     const observer = {

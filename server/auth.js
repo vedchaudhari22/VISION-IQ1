@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import { prisma } from "./db.js";
+import { findUserByEmail } from "./db.js";
 import { loadEnv } from "./env.js";
 
 const TOKEN_TTL_MS = 1000 * 60 * 60 * 12;
@@ -86,9 +86,7 @@ export async function authenticateUser(email, password) {
     return null;
   }
 
-  const user = await prisma.userAccount.findUnique({
-    where: { email: normalizedEmail }
-  });
+  const user = await findUserByEmail(normalizedEmail);
 
   if (!user || !user.isActive || !verifyPassword(password, user.passwordHash)) {
     return null;

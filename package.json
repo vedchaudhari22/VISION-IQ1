@@ -8,6 +8,7 @@
     "dev:client": "vite",
     "dev:server": "node server/index.js",
     "build": "npm run build:css && vite build",
+    "vercel-build": "npm run build",
     "preview": "vite preview",
     "start": "node server/index.js",
     "build:css": "tailwindcss -i ./src/index.css -o ./src/styles.generated.css"
@@ -24,6 +25,7 @@
     "recharts": "^2.15.1"
   },
   "devDependencies": {
+    "@vercel/node": "^5.7.12",
     "@vitejs/plugin-react": "^4.4.1",
     "autoprefixer": "^10.4.20",
     "concurrently": "^9.2.1",
