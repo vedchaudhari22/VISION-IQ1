@@ -3,7 +3,7 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'node:url';
 import env from './env.js';
-import { getDashboardSnapshot, getPublicConfig, ingestSensorReading } from './server/dashboardService.js';
+import { getDashboardSnapshot, getPublicConfig, ingestSensorReading } from './dashboardService.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -85,17 +85,21 @@ app.post('/api/ingest', async (req, res) => {
   }
 });
 
-// Serve static files in production
+// Serve static files - for local dev only (Vercel serves from .vercel/output/static)
 if (env.NODE_ENV === 'production') {
-  const distPath = path.join(__dirname, 'dist');
-  app.use(express.static(distPath));
-
-  // SPA fallback - serve index.html for all non-API routes
-  app.get('*', (req, res) => {
-    if (!req.path.startsWith('/api/')) {
-      res.sendFile(path.join(distPath, 'index.html'));
-    }
-  });
+  // Vercel will serve static files automatically from the build output
+  // This block is only for local testing with `node server/index.vercel.js`
+  const distPath = path.join(__dirname, '..', 'dist');
+  try {
+    app.use(express.static(distPath));
+    app.get('*', (req, res) => {
+      if (!req.path.startsWith('/api/')) {
+        res.sendFile(path.join(distPath, 'index.html'));
+      }
+    });
+  } catch (e) {
+    console.log('Static files not found (expected in Vercel build)');
+  }
 }
 
 // Export for Vercel

@@ -74,12 +74,17 @@ async function queryInflux(fluxQuery) {
   const queryApi = getQueryApi();
   return new Promise((resolve, reject) => {
     const rows = [];
-    const observer = {
-      next: (row) => rows.push(row.values),
-      error: (err) => reject(err),
-      complete: () => resolve(rows)
-    };
-    queryApi.queryRows(fluxQuery, observer);
+    queryApi.queryRows(fluxQuery, {
+      next(row, tableMeta) {
+        rows.push(tableMeta.toObject(row));
+      },
+      error(err) {
+        reject(err);
+      },
+      complete() {
+        resolve(rows);
+      }
+    });
   });
 }
 
@@ -97,12 +102,10 @@ async function getDeviceInfo() {
       return { id: "default", name: "IoT Test Rig", location: "Unknown" };
     }
     const row = rows[0];
-    const obj = {};
-    row.forEach(([key, value]) => { obj[key] = value; });
     return {
-      id: obj.device_id || "default",
-      name: obj.device_name || "IoT Test Rig",
-      location: obj.location || "Unknown"
+      id: row.device_id || "default",
+      name: row.device_name || "IoT Test Rig",
+      location: row.location || "Unknown"
     };
   } catch {
     return { id: "default", name: "IoT Test Rig", location: "Unknown" };
@@ -123,13 +126,11 @@ async function getThresholds() {
       return { tempMin: 0, tempMax: 80, vibrationLow: 1.5, vibrationHigh: 2.4 };
     }
     const row = rows[0];
-    const obj = {};
-    row.forEach(([key, value]) => { obj[key] = value; });
     return {
-      tempMin: toNumber(obj.temp_min),
-      tempMax: toNumber(obj.temp_max),
-      vibrationLow: toNumber(obj.vibration_low, 1.5),
-      vibrationHigh: toNumber(obj.vibration_high, 2.4)
+      tempMin: toNumber(row.temp_min),
+      tempMax: toNumber(row.temp_max),
+      vibrationLow: toNumber(row.vibration_low, 1.5),
+      vibrationHigh: toNumber(row.vibration_high, 2.4)
     };
   } catch {
     return { tempMin: 0, tempMax: 80, vibrationLow: 1.5, vibrationHigh: 2.4 };
@@ -147,12 +148,7 @@ async function getSensorData(deviceId, limit = 50) {
   `;
   
   try {
-    const rows = await queryInflux(fluxQuery);
-    return rows.map((row) => {
-      const obj = {};
-      row.forEach(([key, value]) => { obj[key] = value; });
-      return obj;
-    });
+    return await queryInflux(fluxQuery);
   } catch {
     return [];
   }

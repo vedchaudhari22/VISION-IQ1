@@ -107,13 +107,11 @@ app.post("/api/ingest", async (req, res) => {
   }
 });
 
-if (isProduction) {
-  app.use(express.static(distDir, { index: false }));
+app.use(express.static(distDir, { index: false }));
 
-  app.get(/^(?!\/api).*/, (_req, res) => {
-    res.sendFile(indexHtmlPath);
-  });
-}
+app.get(/^(?!\/api).*/, (_req, res) => {
+  res.sendFile(indexHtmlPath);
+});
 
 app.listen(port, () => {
   console.log(`Server listening on http://localhost:${port}`);
