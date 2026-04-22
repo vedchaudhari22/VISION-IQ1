@@ -2,37 +2,46 @@ import { createServer } from '@vercel/node';
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'node:url';
-import env from './env.js';
+import cors from 'cors';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+import { loadEnv } from './env.js';
 import { getDashboardSnapshot, getPublicConfig, ingestSensorReading } from './dashboardService.js';
 
+const { port, clientOrigin, ingestApiKey } = loadEnv();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
 
-// Middleware
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" }
+  })
+);
+
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (!origin || !clientOrigin || origin === clientOrigin) {
+        return callback(null, true);
+      }
+      return callback(new Error("Origin not allowed by CORS."));
+    },
+    methods: ["GET", "POST"]
+  })
+);
+
+app.use(
+  rateLimit({
+    windowMs: 60 * 1000,
+    limit: 180,
+    standardHeaders: true,
+    legacyHeaders: false
+  })
+);
+
 app.use(express.json({ limit: '100kb' }));
-app.use(require('helmet')({
-  crossOriginResourcePolicy: { policy: "cross-origin" }
-}));
-
-const clientOrigin = env.CLIENT_ORIGIN;
-app.use(require('cors')({
-  origin(origin, callback) {
-    if (!origin || !clientOrigin || origin === clientOrigin) {
-      return callback(null, true);
-    }
-    return callback(new Error("Origin not allowed by CORS."));
-  },
-  methods: ["GET", "POST"]
-}));
-
-app.use(require('express-rate-limit')({
-  windowMs: 60 * 1000,
-  limit: 180,
-  standardHeaders: true,
-  legacyHeaders: false
-}));
 
 // Public config endpoint
 app.get('/api/public/config', async (_req, res) => {
@@ -73,7 +82,7 @@ app.get('/api/dashboard', async (_req, res) => {
 app.post('/api/ingest', async (req, res) => {
   try {
     const apiKey = req.headers["x-api-key"];
-    if (!env.INGEST_API_KEY || apiKey !== env.INGEST_API_KEY) {
+    if (!ingestApiKey || apiKey !== ingestApiKey) {
       return res.status(401).json({ message: "Invalid ingest API key." });
     }
 
@@ -86,9 +95,7 @@ app.post('/api/ingest', async (req, res) => {
 });
 
 // Serve static files - for local dev only (Vercel serves from .vercel/output/static)
-if (env.NODE_ENV === 'production') {
-  // Vercel will serve static files automatically from the build output
-  // This block is only for local testing with `node server/index.vercel.js`
+if (process.env.NODE_ENV === 'production') {
   const distPath = path.join(__dirname, '..', 'dist');
   try {
     app.use(express.static(distPath));
@@ -107,8 +114,7 @@ export default createServer(app);
 
 // Local testing
 if (import.meta.url === `file://${__filename}`) {
-  const PORT = env.PORT || 4000;
-  app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+  app.listen(port, () => {
+    console.log(`Server running on http://localhost:${port}`);
   });
 }
