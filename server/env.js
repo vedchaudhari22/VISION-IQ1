@@ -12,21 +12,9 @@ export function loadEnv() {
     appSecret: process.env.APP_SECRET || "change-this-dev-secret-before-production",
     ingestApiKey: process.env.INGEST_API_KEY || "",
     port: Number(process.env.PORT || 4000),
-    clientOrigin: process.env.CLIENT_ORIGIN || "*",
+    clientOrigin: process.env.CLIENT_ORIGIN || (process.env.NODE_ENV === "production" ? "*" : "http://localhost:5173"),
     influxUrl: influxUrl || "",
     influxToken: influxToken || "",
-    influxOrg,
-    influxBucket
-  };
-}
-
-  return {
-    appSecret: process.env.APP_SECRET || "change-this-dev-secret-before-production",
-    ingestApiKey: process.env.INGEST_API_KEY || "",
-    port: Number(process.env.PORT || 4000),
-    clientOrigin: process.env.CLIENT_ORIGIN || "http://localhost:5173",
-    influxUrl,
-    influxToken,
     influxOrg,
     influxBucket
   };

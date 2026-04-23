@@ -4,6 +4,9 @@ import { loadEnv } from "./env.js";
 
 const { influxBucket } = loadEnv();
 
+// Check if we're using InfluxDB or SQL Server based on available config
+const isInfluxDB = !!(process.env.INFLUXDB_URL && process.env.INFLUXDB_TOKEN);
+
 function toNumber(value, fallback = 0) {
   const numericValue = Number(value);
   return Number.isFinite(numericValue) ? numericValue : fallback;

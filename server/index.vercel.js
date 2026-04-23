@@ -94,18 +94,19 @@ app.post('/api/ingest', async (req, res) => {
   }
 });
 
-// Serve static files - for local dev only (Vercel serves from .vercel/output/static)
-if (process.env.NODE_ENV === 'production') {
+// Vercel handles static files automatically from the dist directory
+// This is only needed for local development
+if (process.env.NODE_ENV !== 'production') {
   const distPath = path.join(__dirname, '..', 'dist');
   try {
-    app.use(express.static(distPath));
+    app.use(express.static(distPath, { index: false }));
     app.get('*', (req, res) => {
       if (!req.path.startsWith('/api/')) {
         res.sendFile(path.join(distPath, 'index.html'));
       }
     });
   } catch (e) {
-    console.log('Static files not found (expected in Vercel build)');
+    console.log('Static files not found (build the frontend first)');
   }
 }
 

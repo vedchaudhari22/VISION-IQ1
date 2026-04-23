@@ -13,7 +13,8 @@
     },
     {
       "src": "/(.*)",
-      "dest": "/dist/index.html"
+      "dest": "/$1"
     }
-  ]
+  ],
+  "outputDirectory": "dist"
 }
