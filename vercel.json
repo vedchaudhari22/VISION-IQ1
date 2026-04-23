@@ -1,6 +1,12 @@
 {
   "version": 2,
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
   "builds": [
+    {
+      "src": "dist/**",
+      "use": "@vercel/static"
+    },
     {
       "src": "server/index.vercel.js",
       "use": "@vercel/node"
@@ -12,8 +18,12 @@
       "dest": "server/index.vercel.js"
     },
     {
-      "src": "/(.*)",
+      "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot))",
       "dest": "/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ],
   "outputDirectory": "dist"
