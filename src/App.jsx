@@ -4,6 +4,7 @@ import { DashboardLayout } from "./components/DashboardLayout";
 import { API_BASE_URL } from "./lib/api";
 
 const EMAIL_STORAGE_KEY = "iot-rig-email";
+const THEME_KEY = "iot-rig-theme";
 const EMPTY_UI_CONFIG = {
   appName: "",
   loginBadge: "",
@@ -41,9 +42,26 @@ export default function App() {
   const [rememberedEmail, setRememberedEmail] = useState("");
   const [authState, setAuthState] = useState(null);
   const [uiConfig, setUiConfig] = useState(EMPTY_UI_CONFIG);
+  const [theme, setTheme] = useState(() => {
+    const stored = safeGet(localStorage, THEME_KEY) || safeGet(sessionStorage, THEME_KEY);
+    if (stored === "dark") return "dark";
+    if (stored === "light") return "light";
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  });
 
   useEffect(() => {
-    document.documentElement.classList.remove("dark");
+    const root = document.documentElement;
+    if (theme === "dark") {
+      root.classList.add("dark");
+      root.classList.remove("light");
+    } else {
+      root.classList.add("light");
+      root.classList.remove("dark");
+    }
+    safeSet(localStorage, THEME_KEY, theme);
+  }, [theme]);
+
+  useEffect(() => {
     document.documentElement.classList.add("light");
     setRememberedEmail(safeGet(localStorage, EMAIL_STORAGE_KEY) || "");
     setIsAuthenticated(false);
@@ -78,12 +96,29 @@ export default function App() {
     setIsAuthenticated(false);
   };
 
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+  };
+
   return (
-    <div className="text-slate-900">
+    <div className={`min-h-screen ${theme === 'dark' ? 'dark' : ''}`}>
       {isAuthenticated ? (
-        <DashboardLayout authToken={null} authUser={authState?.user} uiConfig={uiConfig} onLogout={handleLogout} />
+        <DashboardLayout
+          authToken={null}
+          authUser={authState?.user}
+          uiConfig={uiConfig}
+          onLogout={handleLogout}
+          theme={theme}
+          onToggleTheme={toggleTheme}
+        />
       ) : (
-        <LoginPage rememberedEmail={rememberedEmail} onLogin={handleLogin} uiConfig={uiConfig} />
+        <LoginPage
+          rememberedEmail={rememberedEmail}
+          onLogin={handleLogin}
+          uiConfig={uiConfig}
+          theme={theme}
+          onToggleTheme={toggleTheme}
+        />
       )}
     </div>
   );

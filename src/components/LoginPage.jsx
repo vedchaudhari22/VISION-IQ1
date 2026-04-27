@@ -6,7 +6,7 @@ const featureItems = [
   ["Alerts", "Thermal Trend"]
 ];
 
-export function LoginPage({ rememberedEmail, onLogin, uiConfig }) {
+export function LoginPage({ rememberedEmail, onLogin, uiConfig, theme, onToggleTheme }) {
   const [formData, setFormData] = useState({
     email: rememberedEmail,
     password: "",
