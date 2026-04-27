@@ -68,7 +68,7 @@
 
   .surface-muted {
     @apply rounded-2xl border;
-    @apply bg-white/82 border-blue-100/90;
+    @apply bg-white/80 border-blue-100/90;
   }
 
   .dark .surface-muted {
