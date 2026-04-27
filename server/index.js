@@ -82,7 +82,7 @@ app.get("/api/dashboard", async (_req, res) => {
         ...lastKnownDashboard,
         isConnected: false,
         stale: true,
-        staleReason: "Azure SQL is temporarily unreachable. Showing the last successful snapshot."
+        staleReason: "InfluxDB is temporarily unreachable. Showing the last successful snapshot."
       });
     }
 

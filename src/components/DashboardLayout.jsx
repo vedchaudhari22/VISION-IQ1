@@ -150,7 +150,7 @@ export function DashboardLayout({ authUser, uiConfig, onLogout }) {
 
   const statusSummary = useMemo(() => {
     if (isLoading && !hasSnapshot) {
-      return { tone: "amber", label: "Loading", message: "Loading telemetry from Azure SQL." };
+      return { tone: "amber", label: "Loading", message: "Loading telemetry from InfluxDB." };
     }
     if (error && hasSnapshot) {
       return { tone: "amber", label: "Cached Data", message: error };
@@ -544,3 +544,4 @@ export function DashboardLayout({ authUser, uiConfig, onLogout }) {
     </div>
   );
 }
+

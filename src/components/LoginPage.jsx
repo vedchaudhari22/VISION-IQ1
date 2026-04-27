@@ -60,7 +60,7 @@ export function LoginPage({ rememberedEmail, onLogin, uiConfig }) {
               </span>
               <div className="space-y-5">
                 <h1 className="max-w-xl text-5xl font-semibold leading-[1.04] text-white xl:text-[4rem]">
-                  {uiConfig.loginHeadline || "Monitor your IoT test rig with live data fetched from Azure SQL."}
+                  {uiConfig.loginHeadline || "Monitor your IoT test rig with live data fetched from InfluxDB."}
                 </h1>
                 <p className="max-w-lg text-base leading-8 text-white/82 xl:text-lg">
                   {uiConfig.loginDescription || "PLC data can be pushed into Sensor_Data through HTTP or Modbus TCP middleware, then visualized here in real time."}
@@ -139,3 +139,4 @@ export function LoginPage({ rememberedEmail, onLogin, uiConfig }) {
     </main>
   );
 }
+
