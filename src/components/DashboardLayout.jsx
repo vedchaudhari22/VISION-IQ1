@@ -125,7 +125,6 @@ function exportCsv(rows) {
 
 export function DashboardLayout({ authUser, uiConfig, onLogout, theme, onToggleTheme }) {
   const [activePage, setActivePage] = useState("home");
-  const [activePage, setActivePage] = useState("home");
   const {
     alerts,
     config,
