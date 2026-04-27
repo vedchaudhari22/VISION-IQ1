@@ -125,6 +125,7 @@ function exportCsv(rows) {
 
 export function DashboardLayout({ authUser, uiConfig, onLogout, theme, onToggleTheme }) {
   const [activePage, setActivePage] = useState("home");
+  const [activePage, setActivePage] = useState("home");
   const {
     alerts,
     config,
@@ -520,6 +521,15 @@ export function DashboardLayout({ authUser, uiConfig, onLogout, theme, onToggleT
                   <p className="text-slate-500">{authUser?.role || "Operator"}</p>
                 </div>
               </div>
+
+              <button
+                type="button"
+                onClick={onToggleTheme}
+                className="rounded-2xl border border-blue-100 bg-white/95 px-4 py-3 text-sm shadow-lg shadow-blue-900/5 hover:bg-blue-50"
+                title={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+              >
+                {theme === 'light' ? '🌙' : '☀️'}
+              </button>
 
               <button
                 type="button"

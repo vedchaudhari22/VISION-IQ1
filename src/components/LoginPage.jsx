@@ -45,8 +45,8 @@ export function LoginPage({ rememberedEmail, onLogin, uiConfig, theme, onToggleT
     }
   };
 
-  return (
-    <main className="min-h-screen bg-[linear-gradient(160deg,#eef6ff_0%,#f7fbff_52%,#e4eefb_100%)] px-4 py-10 sm:px-6 lg:px-10">
+   return (
+     <main className={`min-h-screen ${theme === 'dark' ? 'dark' : ''} bg-[linear-gradient(160deg,#eef6ff_0%,#f7fbff_52%,#e4eefb_100%)] px-4 py-10 sm:px-6 lg:px-10`}>
       <div className="mx-auto grid min-h-[calc(100vh-5rem)] w-full max-w-6xl overflow-hidden rounded-[36px] border border-blue-100 bg-white/78 shadow-[0_32px_90px_rgba(15,23,42,0.14)] backdrop-blur-xl lg:grid-cols-[1.16fr_0.84fr]">
         <section className="relative hidden overflow-hidden lg:flex lg:flex-col lg:justify-between">
           <img src="/cnn-hero.jpg" alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover object-[72%_center]" />
@@ -81,11 +81,21 @@ export function LoginPage({ rememberedEmail, onLogin, uiConfig, theme, onToggleT
 
         <section className="flex items-center justify-center bg-[linear-gradient(180deg,rgba(255,255,255,0.86),rgba(255,255,255,0.94))] p-6 sm:p-10">
           <div className="w-full max-w-[430px] rounded-[32px] border border-blue-100 bg-white/96 p-7 shadow-[0_24px_70px_rgba(30,64,175,0.10)] sm:p-9">
-            <div className="mb-8 space-y-3">
-              <p className="text-sm uppercase tracking-[0.32em] text-blue-700">{uiConfig.appName || "Primary IoT Test Rig"}</p>
-              <h2 className="text-4xl font-semibold text-slate-900">Login</h2>
-              <p className="max-w-sm text-base leading-7 text-slate-500">Enter your operator credentials to access the dashboard.</p>
-            </div>
+          <div className="mb-8 space-y-3">
+               <div className="flex justify-end">
+                 <button
+                   type="button"
+                   onClick={onToggleTheme}
+                   className="rounded-full border border-blue-200 bg-white/90 px-3 py-2 text-lg hover:bg-blue-50"
+                   title={theme === 'light' ? 'Dark mode' : 'Light mode'}
+                 >
+                   {theme === 'light' ? '🌙' : '☀️'}
+                 </button>
+               </div>
+               <p className="text-sm uppercase tracking-[0.32em] text-blue-700">{uiConfig.appName || "Primary IoT Test Rig"}</p>
+               <h2 className="text-4xl font-semibold text-slate-900">Login</h2>
+               <p className="max-w-sm text-base leading-7 text-slate-500">Enter your operator credentials to access the dashboard.</p>
+             </div>
 
             <form className="space-y-5" onSubmit={handleSubmit}>
               <label className="block space-y-2">
