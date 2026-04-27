@@ -3,27 +3,17 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    color-scheme: light;
-  }
-
-  .dark {
-    color-scheme: dark;
-  }
-
   html, body, #root {
     min-height: 100%;
-    transition: background 0.3s ease, color 0.3s ease;
   }
 
   body {
-    @apply min-h-screen font-display antialiased;
-    @apply bg-white text-slate-900;
+    @apply min-h-screen font-display antialiased text-slate-900;
+    @apply bg-white;
     background:
       radial-gradient(circle at top left, rgba(96, 165, 250, 0.18), transparent 24%),
       radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.16), transparent 30%),
       linear-gradient(180deg, #ffffff 0%, #f8fbff 54%, #edf5ff 100%);
-    transition: background 0.4s ease;
   }
 
   body::before {
@@ -38,78 +28,32 @@
     background-size: 48px 48px;
     mask-image: radial-gradient(circle at center, black 40%, transparent 86%);
     -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 86%);
-    transition: opacity 0.3s ease;
-  }
-
-  .dark body {
-    @apply bg-slate-950 text-slate-100;
-    background:
-      radial-gradient(circle at top left, rgba(96, 165, 250, 0.12), transparent 24%),
-      radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.10), transparent 30%),
-      linear-gradient(180deg, #0a0a0a 0%, #111827 54%, #1f2937 100%);
-  }
-
-  .dark body::before {
-    opacity: 0.06;
-    background-image:
-      linear-gradient(rgba(96, 165, 250, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(96, 165, 250, 0.04) 1px, transparent 1px);
   }
 }
 
 @layer components {
   .glass-panel {
-    @apply rounded-[26px] border p-5 backdrop-blur-md;
-    @apply bg-white/95 border-blue-100/90;
+    @apply rounded-[26px] border border-blue-100/90 p-5 backdrop-blur-md;
+    @apply bg-white/95;
     @apply shadow-[0_20px_60px_rgba(37,99,235,0.08)];
-    transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .dark .glass-panel {
-    @apply bg-slate-900/95 border-slate-700/60;
-    @apply shadow-[0_20px_60px_rgba(0,0,0,0.5)];
   }
 
   .surface-muted {
-    @apply rounded-2xl border;
-    @apply bg-white/95 border-blue-100/90;
-    transition: background 0.3s ease, border-color 0.3s ease;
-  }
-
-  .dark .surface-muted {
-    @apply bg-slate-800/80 border-slate-700/60;
+    @apply rounded-2xl border border-blue-100/90;
+    @apply bg-white/95;
   }
 
   .brand-accent {
     @apply bg-gradient-to-br from-blue-600 to-sky-500 text-white;
   }
-
-  .dark .brand-accent {
-    @apply from-blue-500 to-sky-400;
-  }
 }
 
-/* Scrollbar - Light */
+/* Scrollbar */
 ::-webkit-scrollbar { width: 10px; }
 ::-webkit-scrollbar-track {
-  @apply bg-slate-200/50;
   background: rgba(148, 163, 184, 0.15);
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-blue-500/40 rounded-full;
   background: rgba(37, 99, 235, 0.28);
   border-radius: 9999px;
-}
-
-/* Scrollbar - Dark */
-.dark ::-webkit-scrollbar-track {
-  @apply bg-slate-800/60;
-}
-.dark ::-webkit-scrollbar-thumb {
-  @apply bg-blue-400/50;
-}
-
-/* Theme transition for all elements */
-* {
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
